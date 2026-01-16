@@ -1,6 +1,8 @@
 import os
 import uuid
 import pandas as pd
+import yaml
+
 from flask import Blueprint, request, render_template, jsonify
 
 from engine.pipeline import run_pipeline
@@ -51,4 +53,5 @@ def analyze():
         output_dir="artifacts"
     )
 
-    return render_template("result.html")
+    return render_template("result.html", payload=payload)
+
