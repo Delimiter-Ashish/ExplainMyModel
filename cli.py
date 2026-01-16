@@ -26,11 +26,12 @@ def main():
         help="Model type to use"
     )
 
-    parser.add_argument(
+       parser.add_argument(
         "--config",
-        default="config/config.yaml",
+        default="config.yaml",
         help="Path to config.yaml"
     )
+
 
 
     parser.add_argument(
@@ -66,4 +67,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
