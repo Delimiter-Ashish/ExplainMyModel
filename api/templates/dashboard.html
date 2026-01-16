@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ExplainMyModel Dashboard</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            padding: 30px;
+        }
+
+        h1 {
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        canvas {
+            max-width: 100%;
+        }
+
+        .footer {
+            margin-top: 30px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #1a73e8;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>📊 ExplainMyModel Dashboard</h1>
+<p class="subtitle">Production ML Audit & Risk Overview</p>
+
+{% if payload is none %}
+    <div class="card">
+        <p>No analysis found.</p>
+        <p>Please run an analysis first.</p>
+        <a href="/">⬅ Back to Home</a>
+    </div>
+{% else %}
+
+<div class="grid">
+
+    <!-- MODEL PERFORMANCE -->
+    <div class="card">
+        <h3>Model Performance</h3>
+        <canvas id="performanceChart"></canvas>
+    </div>
+
+    <!-- BUSINESS COST -->
+    <div class="card">
+        <h3>Business Cost Impact</h3>
+        <canvas id="costChart"></canvas>
+    </div>
+
+    <!-- DATA DRIFT -->
+    <div class="card">
+        <h3>Top Feature Drift</h3>
+        <canvas id="driftChart"></canvas>
+    </div>
+
+    <!-- FEATURE IMPORTANCE -->
+    <div class="card">
+        <h3>Top Feature Importance</h3>
+        <canvas id="importanceChart"></canvas>
+    </div>
+
+</div>
+
+<script>
+    // Injected payload from Flask
+    const metrics = {{ payload.metrics | tojson }};
+    const cost = {{ payload.cost_analysis | tojson }};
+    const drift = {{ payload.drift | tojson }};
+    const importance = {{ payload.feature_importance | tojson }};
+
+    /* ============================
+       SEECTION 1: PERFORMANCE
+    ============================ */
+    new Chart(document.getElementById("performanceChart"), {
+        type: "bar",
+        data: {
+            labels: ["Accuracy", "Precision (Fraud)", "Recall (Fraud)"],
+            datasets: [{
+                data: [
+                    metrics.accuracy,
+                    metrics["1"].precision,
+                    metrics["1"].recall
+                ],
+                backgroundColor: ["#4caf50", "#2196f3", "#ff9800"]
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, max: 1 } }
+        }
+    });
+
+    /* ============================
+       SEECTION 2: BUSINESS COST
+    ============================ */
+    new Chart(document.getElementById("costChart"), {
+        type: "pie",
+        data: {
+            labels: ["False Negatives", "False Positives"],
+            datasets: [{
+                data: [
+                    cost.false_negatives,
+                    cost.false_positives
+                ],
+                backgroundColor: ["#f44336", "#ffc107"]
+            }]
+        }
+    });
+
+    /* ============================
+       SEECTION 3: DRIFT (TOP 5)
+    ============================ */
+    const driftKeys = Object.keys(drift).slice(0, 5);
+    const driftVals = driftKeys.map(k => drift[k]);
+
+    new Chart(document.getElementById("driftChart"), {
+        type: "bar",
+        data: {
+            labels: driftKeys,
+            datasets: [{
+                data: driftVals,
+                backgroundColor: "#9c27b0"
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false } }
+        }
+    });
+
+    /* ============================
+       SEECTION 4: FEATURE IMPORTANCE
+    ============================ */
+    const impKeys = Object.keys(importance).slice(0, 5);
+    const impVals = impKeys.map(k => importance[k]);
+
+    new Chart(document.getElementById("importanceChart"), {
+        type: "bar",
+        data: {
+            labels: impKeys,
+            datasets: [{
+                data: impVals,
+                backgroundColor: "#03a9f4"
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false } }
+        }
+    });
+</script>
+
+<div class="footer">
+    <a href="/">⬅ Run another analysis</a>
+</div>
+
+{% endif %}
+
+</body>
+</html>

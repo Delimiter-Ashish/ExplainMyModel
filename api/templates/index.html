@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ExplainMyModel</title>
+    <style>
+        body { font-family: Arial; background: #f5f5f5; padding: 40px; }
+        .box { background: white; padding: 30px; width: 500px; margin: auto; border-radius: 8px; }
+        input, select, button { width: 100%; padding: 10px; margin-top: 10px; }
+        button { background: #222; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h2>ExplainMyModel</h2>
+    <form action="/analyze" method="post" enctype="multipart/form-data">
+        <label>Upload CSV</label>
+        <input type="file" name="file">
+
+        <label>Or CSV URL</label>
+        <input type="text" name="csv_url" placeholder="https://...csv">
+
+        <label>Target Column</label>
+        <input type="text" name="target" required>
+
+        <label>Model</label>
+        <select name="model">
+            <option value="xgboost">XGBoost</option>
+            <option value="random_forest">Random Forest</option>
+        </select>
+
+        <button type="submit">Analyze</button>
+    </form>
+</div>
+</body>
+</html>

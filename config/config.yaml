@@ -1,0 +1,19 @@
+app:
+  name: ExplainMyModel
+  debug: true
+
+pipeline:
+  test_size: 0.2
+  random_state: 42
+
+models:
+  xgboost:
+    n_estimators: 300
+    max_depth: 5
+
+  random_forest:
+    n_estimators: 300
+
+llm:
+  enabled: false
+  model_path: model.gguf

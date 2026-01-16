@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analysis Result</title>
+    <style>
+        body { font-family: Arial; padding: 30px; }
+        pre { background: #f0f0f0; padding: 20px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+
+<h2>Analysis Completed</h2>
+
+<p><b>Model:</b> {{ model }}</p>
+<p><b>Target:</b> {{ target }}</p>
+
+<h3>Schema</h3>
+<pre>{{ payload.schema | tojson(indent=2) }}</pre>
+
+<h3>Metrics</h3>
+<pre>{{ payload.metrics | tojson(indent=2) }}</pre>
+
+<h3>Business Cost</h3>
+<pre>{{ payload.cost_analysis | tojson(indent=2) }}</pre>
+
+<h3>Top Feature Importance</h3>
+<pre>{{ payload.feature_importance | tojson(indent=2) }}</pre>
+
+<a href="/">Run another analysis</a>
+
+</body>
+</html>
