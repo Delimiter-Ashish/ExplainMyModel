@@ -28,9 +28,10 @@ def main():
 
     parser.add_argument(
         "--config",
-        default="config.yaml",
+        default="config/config.yaml",
         help="Path to config.yaml"
     )
+
 
     parser.add_argument(
         "--out",
@@ -46,11 +47,11 @@ def main():
 
     model_config = config["models"].get(args.model, {})
 
-    print("\n🚀 Running ExplainMyModel Pipeline")
-    print(f"📂 Dataset: {args.csv}")
-    print(f"🎯 Target: {args.target}")
-    print(f"🤖 Model: {args.model}")
-    print(f"📁 Output: {args.out}\n")
+    print("\n Running ExplainMyModel Pipeline")
+    print(f" Dataset: {args.csv}")
+    print(f" Target: {args.target}")
+    print(f" Model: {args.model}")
+    print(f" Output: {args.out}\n")
 
     payload = run_pipeline(
         csv_source=args.csv,
@@ -65,3 +66,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
